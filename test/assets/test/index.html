@@ -9,6 +9,7 @@
   <script src="javascripts/test-vendor.js"></script>
   <script src="javascripts/test.js"></script>
   <script>
+  mocha.setup({ui: 'bdd'})
   $(function() {
     require('test/initialize');
     mocha.run();
