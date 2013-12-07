@@ -1,5 +1,5 @@
 tests = [
-  './test'
+  './model/world-test'
 ]
 
 for test in tests
