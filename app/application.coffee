@@ -1,7 +1,7 @@
 # The application bootstrapper.
 Application =
   initialize: ->
-    HomeView = require 'views/home_view'
+    HomeView = require 'views/home-view'
     Router = require 'lib/router'
 
     # Ideally, initialized classes should be kept in controllers & mediator.
