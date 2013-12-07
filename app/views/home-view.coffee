@@ -13,6 +13,6 @@ module.exports = class HomeView extends View
     @worldView = new WorldView model: @world
 
   render: ->
-    el = super
+    super
     @$('#js-visulan-slot').html @worldView.render().el
-    el
+    @
