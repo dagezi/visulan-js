@@ -7,9 +7,8 @@ module.exports = class HomeView extends View
   id: 'home-view'
   template: template
 
-  initialize: ->
+  initialize: ({@world})->
     super
-    @world = new World height: 50, width: 100
     @worldView = new WorldView model: @world
 
   render: ->
