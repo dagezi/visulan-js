@@ -1,6 +1,6 @@
 Model = require 'models/model'
 
-module.exports = class World extends Model
+module.exports = class Region extends Model
   initialize: ({@width, @height}) ->
     row = new Array(@width + 1).join('_')
 
@@ -18,3 +18,10 @@ module.exports = class World extends Model
   setSym: (y, x, sym)->
     row = @board[y]
     @board[y] = row.slice(0, x) + sym + row.slice(x + 1)
+
+  getRegion: (width, height, left, top) ->
+    new Region(@, {width: width, height: height, left: left, top: top})
+
+  getWholeRegion: ()->
+    @getRegion(@width, @height, 0, 0)
+
