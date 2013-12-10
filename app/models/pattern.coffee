@@ -18,6 +18,7 @@ module.exports = class Pattern extends Model
   # Try to match
   # matcher object, which contains matched subregions
   # subregions must not intersect with each other
+  # TODO: add subregions argument to avoid collision.
   match: (region)->
     subregions = []
     for y in [0 .. region.height - @getHeight()]

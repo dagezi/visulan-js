@@ -40,9 +40,21 @@ describe 'Pattern', ->
     it 'subregions should not collide each other, but...', ->
       pattern = new Pattern ["aaa", "aaa"]
       world = new World height: 3, width: 3
-      world.initWith "aaaa" + "aaa" + "aaa"
+      world.initWith "aaa" + "aaa" + "aaa"
       region = world.getWholeRegion()
       regions = pattern.match(region)
 
       # TODO: fix this!
       expect(regions).to.have.length(2)  # should 1!
+
+    it 'should not match outside of region horizontally', ->
+      world = new World height: 3, width: 4
+      world.initWith "aaaa" + "aaaa" + "abbb"
+      region = world.getRegion(3, 3, 0, 0)
+      expect(@pattern.match(region)).to.have.length 0
+
+    it 'should not match outside of region vertically', ->
+      world = new World height: 4, width: 4
+      world.initWith "____" + "aaaa" + "aaaa" + "abbb"
+      region = world.getRegion(4, 3, 0, 0)
+      expect(@pattern.match(region)).to.have.length 0
