@@ -6,5 +6,5 @@ module.exports = class Router extends Backbone.Router
     'pattern/:pattern': 'home'
 
   home: (pattern)->
-    application.world.initWith pattern
+    application.world.initWith pattern if pattern
     $('body').html application.homeView.render().el

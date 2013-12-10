@@ -14,7 +14,7 @@ module.exports = class World extends Model
       @board[y] = row
 
   getSym: (x, y)->
-    @board[y][x]
+    @board[y].charAt(x)
 
   setSym: (x, y, sym)->
     row = @board[y]

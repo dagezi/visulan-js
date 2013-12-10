@@ -17,9 +17,9 @@ module.exports = class WorldView extends View
   draw: ->
     cellWidth = 5
     cellHeight = 5
-    for y in [0 .. @model.height - 1]
-      for x in [0 .. @model.width - 1]
-        sym = @model.getSym(y, x)
+    for y in [0 ... @model.height]
+      for x in [0 ... @model.width]
+        sym = @model.getSym(x, y)
         @canvasCtx.fillStyle = Color.toColor(sym)
         @canvasCtx.fillRect cellWidth * x, cellHeight * y,
           cellWidth * (x + 1), cellHeight * (y + 1)
