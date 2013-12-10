@@ -5,10 +5,10 @@ module.exports = class World extends Model
   initialize: ({@width, @height}) ->
     row = new Array(@width + 1).join('_')
 
-    @board = (row for i in [0..@height - 1])
+    @board = (row for i in [0 ... @height])
 
   initWith: (pattern)->
-    for y in [0 .. @height - 1]
+    for y in [0 ... @height]
       row = pattern.slice(y * @width, (y + 1) * @width)
       row = row + @board[y].slice(row.length)
       @board[y] = row

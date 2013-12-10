@@ -1,4 +1,5 @@
 World = require 'models/world'
+Region = require 'models/region'
 
 describe 'World', ->
   beforeEach ->
@@ -29,3 +30,10 @@ describe 'World', ->
       @world.setSym 0, 0, 'z'
       expect(@world.getSym(0, 0)).to.be 'z'
       expect(@world.checkSanity()).to.be true
+
+  describe '#getWholeRegion', ->
+    it 'should create region with same size', ->
+      region = @world.getWholeRegion()
+      expect(region).to.be.a(Region)
+      expect(region.height).to.be @world.height
+      expect(region.width).to.be @world.width
