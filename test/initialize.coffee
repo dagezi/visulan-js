@@ -2,6 +2,7 @@ tests = [
   './models/world-test'
   './models/region-test'
   './models/pattern-test'
+  './models/pair-test'
   './lib/assert-test'
 ]
 
