@@ -10,17 +10,18 @@ module.exports = class WorldView extends View
 
   render: ->
     super
+    @multi = 8 # with small number, dots blur. I don't know why.
+    @el.height = @model.height * @multi
+    @el.width = @model.width * @multi
     @canvasCtx = @el.getContext('2d')
+    @canvasCtx.imageSmoothingEnabled = false
     @draw()
     @
 
   draw: ->
-    cellWidth = 5
-    cellHeight = 5
     for y in [0 ... @model.height]
       for x in [0 ... @model.width]
         sym = @model.getSym(x, y)
         @canvasCtx.fillStyle = Color.toColor(sym)
-        @canvasCtx.fillRect cellWidth * x, cellHeight * y,
-          cellWidth * (x + 1), cellHeight * (y + 1)
+        @canvasCtx.fillRect x * @multi, y * @multi, (x + 1) * @multi, (y + 1) * @multi
 
