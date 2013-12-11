@@ -4,6 +4,7 @@ Pair = require 'models/pair'
 
 View = require 'views/view'
 WorldView = require 'views/world-view'
+PalletView = require 'views/pallet-view'
 template = require 'views/templates/home'
 
 module.exports = class HomeView extends View
@@ -18,6 +19,7 @@ module.exports = class HomeView extends View
   initialize: ({@world})->
     super
     @worldView = new WorldView model: @world
+    @palletView = new PalletView
 
     @wholeRegion = @world.getWholeRegion()
     # Hack!
@@ -28,10 +30,12 @@ module.exports = class HomeView extends View
     
     @pair = new Pair pattern, afterRegion
   
-
   render: ->
     super
+    @$('#js-pallet-container').html @palletView.render().el
     @$('#js-visulan-slot').html @worldView.render().el
+    @palletView.on 'pickColor', @pickColor
+
     @
 
   play: ->
@@ -47,3 +51,7 @@ module.exports = class HomeView extends View
     matches = @pair.match(@wholeRegion)
     match.execute() for match in matches
     @worldView.draw()
+
+  pickColor: (sym) =>
+    console.log sym
+    @worldView.setPenColor(sym)

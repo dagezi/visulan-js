@@ -19,7 +19,6 @@ module.exports = class WorldView extends View
     @el.height = @model.height * @multi
     @el.width = @model.width * @multi
     @canvasCtx = @el.getContext('2d')
-    @canvasCtx.imageSmoothingEnabled = false
     @draw()
     @
 
