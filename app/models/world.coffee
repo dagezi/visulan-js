@@ -13,6 +13,18 @@ module.exports = class World extends Model
       row = row + @board[y].slice(row.length)
       @board[y] = row
 
+  initWithCompressed: (data)->
+    base64 = data.replace('-','+').replace('_','/')
+    @initWith LZString.decompressFromBase64(base64)
+
+  getData: ->
+    @board.join('')
+
+  getCompressedData: ->
+    raw = @getData()
+    base64 = LZString.compressToBase64(raw)
+    base64.replace('+','-').replace('/','-')
+
   getSym: (x, y)->
     @board[y].charAt(x)
 
@@ -28,3 +40,6 @@ module.exports = class World extends Model
 
   checkSanity: ()->
     @board.length == @height and _.every @board, (row)=> row.length == @width 
+
+  
+  

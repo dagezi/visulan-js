@@ -37,3 +37,24 @@ describe 'World', ->
       expect(region).to.be.a(Region)
       expect(region.height).to.be @world.height
       expect(region.width).to.be @world.width
+
+  describe '#getData', ->
+    it 'should return the data used for initWith', ->
+      data = 'adpbcdefgdafdsaafpkafafdsasdlfdsc'
+      data += new Array(50 - data.length + 1).join('_')
+      @world.initWith data
+      expect(@world.getData()).to.be data
+
+  describe '#initWithCompressed and #getCompressedData', ->
+    it 'should return the data used for initWith', ->
+      data = 'adpbcdefgdafdsaafpkafafdsasdlfdsc'
+      data += new Array(50 - data.length + 1).join('_')
+      @world.initWith data
+
+      compressed = @world.getCompressedData()
+      expect(compressed.length).to.be.lessThan data.length
+      console.log compressed
+
+      newWorld = new World width: 5, height: 10
+      newWorld.initWithCompressed compressed
+      expect(newWorld.getData()).to.be data
