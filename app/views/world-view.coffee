@@ -7,6 +7,11 @@ module.exports = class WorldView extends View
 
   initialize: ({@model}) ->
     super
+    @penColor = 'z'
+
+  events:
+    "mousedown": "drawPixel"
+    "mousemove": "drawPixel"
 
   render: ->
     super
@@ -25,3 +30,13 @@ module.exports = class WorldView extends View
         @canvasCtx.fillStyle = Color.toColor(sym)
         @canvasCtx.fillRect x * @multi, y * @multi, (x + 1) * @multi, (y + 1) * @multi
 
+  
+  drawPixel: (event)->
+    return unless event.which is 1
+    x = (event.offsetX / @multi) | 0
+    y = (event.offsetY / @multi) | 0
+    @model.setSym x, y, @penColor
+    @draw()
+
+  setPenColor: (sym)->
+    @penColor = sym
