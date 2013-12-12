@@ -9,6 +9,9 @@ module.exports = class Pattern extends Model
     @topRe = new RegExp linePatterns[0], "g"
     @width = linePatterns[0].length  # TODO: consider declaration
   
+  @fromRegion: (region)->
+    new Pattern (region.getRow(y) for y in [0...region.height])
+
   getHeight: ->
     @regExps.length
 
