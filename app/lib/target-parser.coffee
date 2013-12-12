@@ -28,8 +28,9 @@ module.exports = class TargetParser
     return false unless header1Regexp.exec(region.getRow(1))
 
     y = 2
-    while y < region.height - 2 and bodyRegexp.exec(region.getRow(y))
+    while y < region.height - 1 and bodyRegexp.exec(region.getRow(y))
       y = y + 1
+    # It's tricky but the bottom border matches bodyRegexp, too.
     if tail0Regexp.exec(region.getRow(y - 1)) and tail1Regexp.exec(region.getRow(y))
       return region.getSubregion region.width - 4, y - 3, 2, 2
     null     

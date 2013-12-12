@@ -12,12 +12,13 @@ describe 'TargetParser', ->
     expect(@targetParser.match(region)).to.be null
 
   it 'should find target', ->
-    world = new World width: 8, height: 10
+    world = new World width: 8, height: 6
     data = 'c______c/_cccccc_/_cabdcc_/_cabdcc_/_cccccc_/c______c/'
     data = data.replace(/\//g, '')
     world.initWith data
     region = world.getWholeRegion()
     targetRegion = @targetParser.match(region)
+    expect(targetRegion).not.to.be null
     expect(targetRegion.width).to.be 4
     expect(targetRegion.height).to.be 2
     expect(targetRegion.top).to.be 2
