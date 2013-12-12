@@ -45,7 +45,7 @@ module.exports = class HomeView extends View
     clearInterval @intervalId
     
   showLink: ->
-    console.log "link"
+    location.hash = '#comp/' + @world.getCompressedData();
 
   progress: =>
     matches = @pair.match(@wholeRegion)
