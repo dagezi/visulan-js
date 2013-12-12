@@ -2,12 +2,15 @@ application = require 'application'
 
 module.exports = class Router extends Backbone.Router
   routes:
-    '': 'home'
-    'pattern/:pattern': 'home'
+    'pattern/:pattern': 'homeWithPattern'
     'comp/:compressed': 'homeWithComp'
+    '': 'home'
 
-  home: (pattern)->
-    application.world.initWith pattern if pattern
+  home: ->
+    $('body').html application.homeView.render().el
+
+  homeWithPattern: (pattern)->
+    application.world.initWith pattern
     $('body').html application.homeView.render().el
 
   homeWithComp: (compressed)->

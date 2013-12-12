@@ -14,7 +14,7 @@ module.exports = class World extends Model
       @board[y] = row
 
   initWithCompressed: (data)->
-    base64 = data.replace(/-/g,'+').replace(/_/g,'/')
+    base64 = data.replace(/\-/g,'+').replace(/\_/g,'/')
     @initWith LZString.decompressFromBase64(base64)
 
   getData: ->
@@ -23,7 +23,7 @@ module.exports = class World extends Model
   getCompressedData: ->
     raw = @getData()
     base64 = LZString.compressToBase64(raw)
-    base64.replace(/\+/g,'-').replace(/\//g,'-')
+    base64.replace(/\+/g,'-').replace(/\//g,'_')
 
   getSym: (x, y)->
     @board[y].charAt(x)
