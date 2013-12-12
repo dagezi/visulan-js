@@ -20,10 +20,6 @@ module.exports = class Application
     @pairParser = new PairParser()
     @targetParser = new TargetParser()
 
-    @target = null
-    @pairs = null
-    @intervalId = null
-
     # Instantiate the router
     @router = new Router()
 
@@ -32,7 +28,9 @@ module.exports = class Application
     @pairs = @pairParser.match @wholeRegion
 
     console.log @target
-    @play() if @target
+    console.log @pairs
+
+    @play() if @target and @pairs
 
   play: =>
     @intervalId = setInterval @progress, 500
@@ -43,7 +41,7 @@ module.exports = class Application
   progress: =>
     matches = []
     for pair in @pairs
-      matches = matches.concat(@pair.match(@target))
+      matches = matches.concat(pair.match(@target))
 
     match.execute() for match in matches
     @homeView.worldView.draw()
