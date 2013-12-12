@@ -30,10 +30,10 @@ module.exports = class PairParser
     for y in [1 ... region.height]
       row = region.getRow(y)
       m = bodyRegexp.exec(row)
-      return null unless m and m[0].charAt(patWidth + 2) == 'c'
+      break unless m and m[0].charAt(patWidth + 2) == 'c'
 
     # getRow(y) is OOB or doesn't match bodyRegexp, which implies neither for tailRegexp
-    return null unless tailRegexp.exec(region.getRow(y - 1))
+    return null unless y >= 3 and tailRegexp.exec(region.getRow(y - 1))
 
     patHeight = y - 2    
     pattern = Pattern.fromRegion(region.getSubregion patWidth, patHeight, 2, 1)

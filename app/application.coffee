@@ -4,13 +4,46 @@ module.exports = class Application
     HomeView = require 'views/home-view'
     Router = require 'lib/router'
     World = require 'models/world'
+    PairParser = require 'lib/pair-parser'
+    TargetParser = require 'lib/target-parser'
+
     # Ideally, initialized classes should be kept in controllers & mediator.
     # If you're making big webapp, here's more sophisticated skeleton
     # https://github.com/paulmillr/brunch-with-chaplin
     @world = new World height: 50, width: 100
+    @wholeRegion = @world.getWholeRegion()
+
     @homeView = new HomeView world: @world
+    @homeView.on 'play', @startPlay
+    @homeView.on 'pause', @pause
+ 
+    @pairParser = new PairParser()
+    @targetParser = new TargetParser()
+
+    @target = null
+    @pairs = null
+    @intervalId = null
 
     # Instantiate the router
     @router = new Router()
-    # Freeze the object
-    Object.freeze? this
+
+  startPlay: =>
+    @target = @targetParser.match @wholeRegion
+    @pairs = @pairParser.match @wholeRegion
+
+    console.log @target
+    @play() if @target
+
+  play: =>
+    @intervalId = setInterval @progress, 500
+
+  pause: =>
+    clearInterval @intervalId
+
+  progress: =>
+    matches = []
+    for pair in @pairs
+      matches = matches.concat(@pair.match(@target))
+
+    match.execute() for match in matches
+    @homeView.worldView.draw()

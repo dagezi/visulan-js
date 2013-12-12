@@ -39,10 +39,10 @@ module.exports = class HomeView extends View
     @
 
   play: ->
-    @intervalId = setInterval @progress, 500
+    @trigger('play')
 
   pause: ->
-    clearInterval @intervalId
+    @trigger('pause')
     
   showLink: ->
     link = location.protocol + "//"
@@ -53,10 +53,6 @@ module.exports = class HomeView extends View
     @$('#js-link-text').toggle()
     @$('#js-link-text').text(link)
 
-  progress: =>
-    matches = @pair.match(@wholeRegion)
-    match.execute() for match in matches
-    @worldView.draw()
 
   pickColor: (sym) =>
     console.log sym
