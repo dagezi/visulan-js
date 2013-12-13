@@ -29,6 +29,22 @@ module.exports = class Region extends Model
   # clone to new region. Its world will be recreated
   clone: ()->
         
+  right: ->
+    @left + @width
+
+  bottom: ->
+    @top + @height
+
   # create new region from intetersecion with another
   # another region must share world.
-  intersects: (region)->
+  intersect: (region)->
+    return null if @world != region.world
+      
+    newTop = Math.max(@top, region.top)
+    newLeft = Math.max(@left, region.left)
+    newBottom = Math.min(@bottom(), region.bottom())
+    newRight = Math.min(@right(), region.right())
+    if newTop < newBottom and newLeft < newRight
+      @world.getRegion(newRight - newLeft, newBottom - newTop, newLeft, newTop)
+    else
+      null

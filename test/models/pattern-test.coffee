@@ -4,6 +4,7 @@ Pattern = require 'models/pattern'
 describe 'Pattern', ->
   beforeEach ->
     @pattern = new Pattern ["aaa", "aaa", "bbb"]
+    @simplePattern = new Pattern ["_"]
 
   describe '#initialize', ->
     it 'should generate expected height and width', ->
@@ -58,3 +59,23 @@ describe 'Pattern', ->
       world.initWith "____" + "aaaa" + "aaaa" + "abbb"
       region = world.getRegion(4, 3, 0, 0)
       expect(@pattern.match(region)).to.have.length 0
+
+    it 'should not collide with other matches', ->
+      world = new World height: 4, width: 4
+      region = world.getRegion(4, 4, 0, 0)
+      matchedRegions = [region]
+      expect(@simplePattern.match(region, matchedRegions)).to.have.length 0
+
+    it 'should match avoiding other matches', ->
+      world = new World height: 4, width: 4
+      region = world.getRegion(4, 4, 0, 0)
+      matchedRegions = []
+      matchedRegions.push world.getRegion(3, 4, 0, 0)
+      matchedRegions.push world.getRegion(1, 2, 3, 1)
+      matches = @simplePattern.match(region, matchedRegions)
+      expect(matches).to.have.length 2
+      expect(matches[0].width).to.be 1
+      expect(matches[0].left).to.be 3
+      expect(matches[1].width).to.be 1
+      expect(matches[1].left).to.be 3
+

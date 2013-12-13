@@ -22,15 +22,17 @@ module.exports = class Pattern extends Model
   # matcher object, which contains matched subregions
   # subregions must not intersect with each other
   # TODO: add subregions argument to avoid collision.
-  match: (region)->
+  match: (targetRegion, matchedRegions)->
     subregions = []
-    for y in [0 .. region.height - @getHeight()]
-      row = region.getRow(y)
+    matchedRegions = [] unless matchedRegions
+    for y in [0 .. targetRegion.height - @getHeight()]
+      row = targetRegion.getRow(y)
       @topRe.lastIndex = 0
       while (m = @topRe.exec(row))
-        # TODO: check if colides with other regions
-        subregion = region.getSubregion @getWidth(), @getHeight(), m.index, y
-        if @submatch(subregion)
+        # TODO: optimize collision check
+        subregion = targetRegion.getSubregion @getWidth(), @getHeight(), m.index, y
+        if (_.every matchedRegions, (r)=>not r.intersect subregion) and
+              @submatch(subregion)
           subregions.push(subregion)
         else
           # Pattern must not be exclusive

@@ -27,3 +27,21 @@ describe 'Region', ->
       expect(@world.checkSanity()).to.be true
       expect(@world.getSym(1, 6)).to.be('a')
       expect(region0.getRow(1)).to.be(region1.getRow(1))
+
+  describe '#intersect', ->
+    it 'should calculate right intersection', ->
+      region0 = @world.getRegion(5, 5, 0, 0)
+      region1 = @world.getRegion(4, 5, 1, 3)
+      intersection = region0.intersect region1
+      expect(intersection.width).to.be 4
+      expect(intersection.height).to.be 2
+
+      # it's commutive
+      intersection = region1.intersect region0
+      expect(intersection.width).to.be 4
+      expect(intersection.height).to.be 2
+
+    it 'should return null', ->
+      region0 = @world.getRegion(5, 5, 0, 0)
+      region1 = @world.getRegion(5, 5, 0, 5)
+      expect(region0.intersect region1).to.be null
