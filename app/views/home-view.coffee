@@ -22,21 +22,25 @@ module.exports = class HomeView extends View
     @palletView = new PalletView
 
     @wholeRegion = @world.getWholeRegion()
-    # Hack!
-    pattern = new Pattern ['z', '_']
-    afterWorld = new World height: 2, width: 1
-    afterWorld.initWith '_z'
-    afterRegion = afterWorld.getRegion 1, 2, 0, 0
-    
-    @pair = new Pair pattern, afterRegion
+
+    @isPlaying = false
   
   render: ->
     super
     @$('#js-pallet-container').html @palletView.render().el
     @$('#js-visulan-slot').html @worldView.render().el
     @palletView.on 'pickColor', @pickColor
+  
+    @setIsPlaying @isPlaying
+
+    @on "playingState", @setIsPlaying
 
     @
+
+  setIsPlaying: (v) ->
+    @isPlaying = v
+    @$('#js_play').prop('disabled', v)
+    @$('#js_pause').prop('disabled', not v)
 
   play: ->
     @trigger('play')

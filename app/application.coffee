@@ -34,9 +34,11 @@ module.exports = class Application
 
   play: =>
     @intervalId = setInterval @progress, 500
+    @homeView.trigger 'playingState', true
 
   pause: =>
     clearInterval @intervalId
+    @homeView.trigger 'playingState', false
 
   progress: =>
     matches = []
