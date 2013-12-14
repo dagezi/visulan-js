@@ -16,6 +16,7 @@ module.exports = class Region extends Model
 
   # Replace with other reigion
   # The width and height should be same
+  # TODO: consider the case this and other region are overlapped
   replaceWith: (region)->
     if region.width != @width or region.height != @height
       console "replaceWith: not match: " + region.width + "x" + region.height

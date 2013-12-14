@@ -75,4 +75,6 @@ module.exports = class HomeView extends View
     @$('#js_edit').addClass('active')
     
   pasteMode: ()->
-    console.log 'TODO: paste'
+    @worldView.setModePaste()
+    @$('.js-world-view-mode').removeClass('active')
+    @$('#js_paste').addClass('active')

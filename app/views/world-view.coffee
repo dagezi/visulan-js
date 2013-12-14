@@ -15,6 +15,7 @@ module.exports = class WorldView extends View
   events:
     "mousedown": "mouseDown"
     "mousemove": "mouseMove"
+    "mouseup": "mouseUp"
     # TODO: Support touch events
 
   render: ->
@@ -34,16 +35,21 @@ module.exports = class WorldView extends View
         @canvasCtx.fillRect x * @multi, y * @multi, (x + 1) * @multi, (y + 1) * @multi
 
     if @selectionPivot and @selectionOther
-      left = Math.min(@selectionPivot[0], @selectionOther[0])
-      right = Math.max(@selectionPivot[0], @selectionOther[0])
-      top = Math.min(@selectionPivot[1], @selectionOther[1])
-      bottom = Math.max(@selectionPivot[1], @selectionOther[1])
-      width = right - left + 1
-      height = bottom - top + 1
+      region = @getRegion(@selectionPivot, @selectionOther)
 
       @canvasCtx.strokeStyle = 'rgb(200,200,200)'
-      @canvasCtx.strokeRect(left * @multi, top * @multi,
-        width * @multi - 1, height * @multi - 1)
+      @canvasCtx.strokeRect(region.left * @multi, region.top * @multi,
+        region.width * @multi - 1, region.height * @multi - 1)
+
+  getRegion: (p0, p1)->
+    left = Math.min(@selectionPivot[0], @selectionOther[0])
+    right = Math.max(@selectionPivot[0], @selectionOther[0])
+    top = Math.min(@selectionPivot[1], @selectionOther[1])
+    bottom = Math.max(@selectionPivot[1], @selectionOther[1])
+    width = right - left + 1
+    height = bottom - top + 1
+
+    @model.getRegion(width, height, left, top)
     
   putPixel: (x, y, sym)->
     @model.setSym x, y, sym
@@ -69,6 +75,13 @@ module.exports = class WorldView extends View
     @selectionOther = [x, y]
     @draw()
 
+  paste: (x, y)->
+    # TODO: consider tha case x, y in nearby bottom/right side
+    sourceRegion = @getRegion(@selectionPivot, @selectionOther)
+    destRegion = @model.getRegion(sourceRegion.width, sourceRegion.height, x, y)
+    destRegion.replaceWith sourceRegion
+    @draw()
+
   getCoordFromMouseEvent: (event)->
     [(event.offsetX / @multi) | 0,
      (event.offsetY / @multi) | 0]
@@ -76,16 +89,26 @@ module.exports = class WorldView extends View
   mouseDown: (event)->
     return unless event.which is 1
     [x, y] = @getCoordFromMouseEvent(event)
-    if @mode == 'edit'
-      @putPixel x, y, @penColor
-    else if 'select'
-      @selectionStart x, y
-
+    switch @mode
+      when 'edit'
+        @putPixel x, y, @penColor
+      when 'select'
+        @selectionStart x, y
+      when 'paste'
+         @paintPivot = [x, y]
         
   mouseMove: (event)->
     return unless event.which is 1
     [x, y] = @getCoordFromMouseEvent(event)
-    if @mode == 'edit'
-      @putPixel x, y, @penColor
-    else if 'select'
-      @selectionChange x, y
+    switch @mode
+      when 'edit'
+        @putPixel x, y, @penColor
+      when 'select'
+        @selectionChange x, y
+
+  mouseUp: (event)->
+    return unless event.which is 1
+    [x, y] = @getCoordFromMouseEvent(event)
+    if @mode == 'paste' and x == @paintPivot[0] and y == @paintPivot[1]
+      @paste x, y
+      
