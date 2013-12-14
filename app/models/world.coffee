@@ -1,10 +1,11 @@
 Model = require 'models/model'
 Region = require 'models/region'
 
+assert = require 'lib/assert'
+
 module.exports = class World extends Model
   initialize: ({@width, @height}) ->
     row = new Array(@width + 1).join('_')
-
     @board = (row for i in [0 ... @height])
 
   initWith: (pattern)->
@@ -17,8 +18,22 @@ module.exports = class World extends Model
     base64 = data.replace(/\-/g,'+').replace(/\_/g,'/')
     @initWith LZString.decompressFromBase64(base64)
 
+  fixInSanity: ->
+    # Hopefully its sanity must not be lost. But in real...
+    emptyRow = new Array(@width + 1).join('_')
+
+    for y in [0...@height]
+      row = @board[y]
+      if row.length < @width
+        @board[y] += emptyRow.slice(row.length)
+      else if row.length > @width
+        @board[y] = row.slice(0, @width)
+
+    assert @checkSanity()
+ 
   getData: ->
-    @board.join('')
+    @fixInSanity()
+    @board.join('') 
 
   getCompressedData: ->
     raw = @getData()
