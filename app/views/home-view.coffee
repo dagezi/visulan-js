@@ -66,9 +66,13 @@ module.exports = class HomeView extends View
 
   selectMdoe: ->
     @worldView.setModeSelect()
+    @$('.js-world-view-mode').removeClass('active')
+    @$('#js_select').addClass('active')
 
   editMode: ->
     @worldView.setModeEdit()
-        
+    @$('.js-world-view-mode').removeClass('active')
+    @$('#js_edit').addClass('active')
+    
   pasteMode: ()->
     console.log 'TODO: paste'
