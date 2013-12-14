@@ -8,10 +8,14 @@ module.exports = class WorldView extends View
   initialize: ({@model}) ->
     super
     @penColor = 'z'
+    @mode = 'edit'  # edit/select/paste
+    @selectionPivot = null
+    @selectionOther = null
 
   events:
-    "mousedown": "drawPixel"
-    "mousemove": "drawPixel"
+    "mousedown": "mouseDown"
+    "mousemove": "mouseMove"
+    # TODO: Support touch events
 
   render: ->
     super
@@ -29,13 +33,59 @@ module.exports = class WorldView extends View
         @canvasCtx.fillStyle = Color.toColor(sym)
         @canvasCtx.fillRect x * @multi, y * @multi, (x + 1) * @multi, (y + 1) * @multi
 
-  
-  drawPixel: (event)->
-    return unless event.which is 1
-    x = (event.offsetX / @multi) | 0
-    y = (event.offsetY / @multi) | 0
-    @model.setSym x, y, @penColor
+    if @selectionPivot and @selectionOther
+      left = Math.min(@selectionPivot[0], @selectionOther[0])
+      right = Math.max(@selectionPivot[0], @selectionOther[0])
+      top = Math.min(@selectionPivot[1], @selectionOther[1])
+      bottom = Math.max(@selectionPivot[1], @selectionOther[1])
+      width = right - left + 1
+      height = bottom - top + 1
+
+      @canvasCtx.strokeStyle = 'rgb(200,200,200)'
+      @canvasCtx.strokeRect(left * @multi, top * @multi,
+        width * @multi - 1, height * @multi - 1)
+    
+  putPixel: (x, y, sym)->
+    @model.setSym x, y, sym
     @draw()
 
   setPenColor: (sym)->
     @penColor = sym
+
+  setModeEdit: ()->
+    @mode = 'edit'
+
+  setModeSelect: ()->
+    @mode = 'select'
+
+  setModePaste: ()->
+    @mode = 'paste'
+
+  selectionStart: (x, y)->
+    @selectionPivot = @selectionOther = [x, y]
+    @draw()
+
+  selectionChange: (x, y)->
+    @selectionOther = [x, y]
+    @draw()
+
+  getCoordFromMouseEvent: (event)->
+    [(event.offsetX / @multi) | 0,
+     (event.offsetY / @multi) | 0]
+
+  mouseDown: (event)->
+    return unless event.which is 1
+    [x, y] = @getCoordFromMouseEvent(event)
+    if @mode == 'edit'
+      @putPixel x, y, @penColor
+    else if 'select'
+      @selectionStart x, y
+
+        
+  mouseMove: (event)->
+    return unless event.which is 1
+    [x, y] = @getCoordFromMouseEvent(event)
+    if @mode == 'edit'
+      @putPixel x, y, @penColor
+    else if 'select'
+      @selectionChange x, y

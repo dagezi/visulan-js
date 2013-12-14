@@ -15,6 +15,9 @@ module.exports = class HomeView extends View
     "click #js_play": "play"
     "click #js_pause": "pause"
     "click #js_link": "showLink"
+    "click #js_edit": "editMode"
+    "click #js_select": "selectMdoe"
+    "click #js_paste": "pasteMode"
 
   initialize: ({@world})->
     super
@@ -57,7 +60,15 @@ module.exports = class HomeView extends View
     @$('#js-link-text').toggle()
     @$('#js-link-text').text(link)
 
-
   pickColor: (sym) =>
     console.log sym
     @worldView.setPenColor(sym)
+
+  selectMdoe: ->
+    @worldView.setModeSelect()
+
+  editMode: ->
+    @worldView.setModeEdit()
+        
+  pasteMode: ()->
+    console.log 'TODO: paste'
