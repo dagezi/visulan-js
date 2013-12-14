@@ -16,16 +16,25 @@ module.exports = class Region extends Model
 
   # Replace with other reigion
   # The width and height should be same
-  # TODO: consider the case this and other region are overlapped
   replaceWith: (region)->
     if region.width != @width or region.height != @height
       console "replaceWith: not match: " + region.width + "x" + region.height
       return
-    for y in [0 ... @height]
+    if @top <= region.top
+      y = 0
+      end = @height
+      step = 1
+    else
+      y = @height - 1
+      end = -1
+      step = -1
+    # No need to worry about horizontal overlap
+    while y != end
       row = @world.board[@top + y]
       oRow = region.getRow(y)
       row = row.slice(0, @left) + oRow + row.slice(@left + @width)
       @world.board[@top + y] = row
+      y = y + step
 
   # clone to new region. Its world will be recreated
   clone: ()->

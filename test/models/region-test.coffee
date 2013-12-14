@@ -20,13 +20,40 @@ describe 'Region', ->
 
   describe '#replaceWith', ->
     it 'should copy', ->
-      region0 = @world.getRegion(5, 5, 0, 0)
-      region1 = @world.getRegion(5, 5, 0, 5)
+      src = @world.getRegion(5, 4, 0, 0)
+      dest = @world.getRegion(5, 4, 0, 5)
       @world.setSym(1, 1, 'a')
-      region1.replaceWith(region0)
+      @world.setSym(2, 4, 'b')
+      dest.replaceWith(src)
       expect(@world.checkSanity()).to.be true
       expect(@world.getSym(1, 6)).to.be('a')
-      expect(region0.getRow(1)).to.be(region1.getRow(1))
+      expect(@world.getSym(2, 9)).to.be('_')
+      expect(src.getRow(1)).to.be(dest.getRow(1))
+
+    it 'should copy correctly to overlapped region above', ->
+      src = @world.getRegion(5, 5, 0, 1)
+      dest = @world.getRegion(5, 5, 0, 0)
+      @world.setSym(4, 0, 'z')
+      @world.setSym(1, 1, 'a')
+      @world.setSym(2, 5, 'b')
+      dest.replaceWith(src)
+      expect(@world.checkSanity()).to.be true
+      expect(@world.getSym(4, 0)).to.be('_')
+      expect(@world.getSym(1, 0)).to.be('a')
+      expect(@world.getSym(2, 4)).to.be('b')
+
+    it 'should copy correctly to overlapped region below', ->
+      src = @world.getRegion(5, 5, 0, 0)
+      dest = @world.getRegion(5, 5, 0, 1)
+      @world.setSym(1, 0, 'a')
+      @world.setSym(2, 4, 'b')
+      @world.setSym(3, 5, 'c')
+      dest.replaceWith(src)
+      expect(@world.checkSanity()).to.be true
+      expect(@world.getSym(1, 1)).to.be('a')
+      expect(@world.getSym(2, 5)).to.be('b')
+      expect(@world.getSym(3, 5)).to.be('_')
+      expect(@world.getSym(3, 6)).to.be('_')
 
   describe '#intersect', ->
     it 'should calculate right intersection', ->
