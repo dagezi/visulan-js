@@ -82,12 +82,28 @@ module.exports = class WorldView extends View
     destRegion.replaceWith sourceRegion
     @draw()
 
-  getCoordFromMouseEvent: (event)->
-    [(event.offsetX / @multi) | 0,
-     (event.offsetY / @multi) | 0]
+  getCoordFromMouseEvent: (e)->
+    if not e.offsetX is undefined
+      x = e.offsetX
+    else
+      x = e.clientX - $(e.target).offset().left
+
+    y = if not e.offsetY is undefined
+          e.offsetY
+        else
+          e.clientY - $(e.target).offset().top
+
+    [(x / @multi) | 0, (y / @multi) | 0]
+
+
+  isButtonDown: (event)->
+    if event.buttons == undefined
+      event.which is 1
+    else
+      event.buttons is 1
 
   mouseDown: (event)->
-    return unless event.which is 1
+    return unless @isButtonDown(event)
     [x, y] = @getCoordFromMouseEvent(event)
     switch @mode
       when 'edit'
@@ -98,7 +114,7 @@ module.exports = class WorldView extends View
          @paintPivot = [x, y]
         
   mouseMove: (event)->
-    return unless event.which is 1
+    return unless @isButtonDown(event)
     [x, y] = @getCoordFromMouseEvent(event)
     switch @mode
       when 'edit'
@@ -107,7 +123,6 @@ module.exports = class WorldView extends View
         @selectionChange x, y
 
   mouseUp: (event)->
-    return unless event.which is 1
     [x, y] = @getCoordFromMouseEvent(event)
     if @mode == 'paste' and x == @paintPivot[0] and y == @paintPivot[1]
       @paste x, y
