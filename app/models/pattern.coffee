@@ -19,9 +19,8 @@ module.exports = class Pattern extends Model
     @width    
 
   # Try to match
-  # matcher object, which contains matched subregions
-  # subregions must not intersect with each other
-  # TODO: add subregions argument to avoid collision.
+  # Returns array of matched subregions
+  # subregions must not intersect with each other and given matchedRegions
   match: (targetRegion, matchedRegions)->
     subregions = []
     matchedRegions = [] unless matchedRegions

@@ -68,7 +68,22 @@ describe 'Region', ->
       expect(intersection.width).to.be 4
       expect(intersection.height).to.be 2
 
+    it 'should return 1x1 region ', ->
+      region0 = @world.getRegion(1, 2, 3, 0)
+      region1 = @world.getRegion(1, 2, 3, 1)
+      intersection = region0.intersect region1
+      expect(intersection.width).to.be 1
+      expect(intersection.height).to.be 1
+
+      # it's commutive
+      intersection = region1.intersect region0
+      expect(intersection.width).to.be 1
+      expect(intersection.height).to.be 1
+
+
     it 'should return null', ->
       region0 = @world.getRegion(5, 5, 0, 0)
       region1 = @world.getRegion(5, 5, 0, 5)
       expect(region0.intersect region1).to.be null
+      expect(region1.intersect region0).to.be null
+
