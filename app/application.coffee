@@ -42,8 +42,10 @@ module.exports = class Application
 
   progress: =>
     matches = []
+    matchedRegions = []
     for pair in @pairs
-      matches = matches.concat(pair.match(@target))
+      matches = matches.concat(pair.match(@target, matchedRegions))
+      matchedRegions.push(match.dest) for match in matches
 
     match.execute() for match in matches
     @homeView.worldView.draw()
