@@ -59,3 +59,14 @@ describe 'PairParser', ->
     expect(pair.after.top).to.be 1
     expect(pair.after.left).to.be 7
 
+  it 'should find two pairs', ->
+    world = new World width: 13, height: 4
+    data = '_ccccc_ccccc_/_cacbc_cbcdc_/_cacbc_cbcdc_/_ccccc_ccccc_'
+    data = data.replace(/\//g, '')
+    world.initWith data
+    region = world.getWholeRegion()
+    pairs = @pairParser.match(region) 
+    expect(pairs).to.have.length 2
+    pair = pairs[0]
+    expect(pair.after.width).to.be 1
+    expect(pair.after.height).to.be 2

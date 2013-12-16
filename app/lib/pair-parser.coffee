@@ -22,7 +22,8 @@ module.exports = class PairParser
         subregion = region.getSubregion m[0].length, region.height - y, m.index, y
         pair = @submatch(subregion)
         pairs.push(pair) if pair
-
+        headerRegexp.lastIndex = m.index + 1
+               
     pairs
 
   submatch: (region)->
