@@ -21,11 +21,12 @@ module.exports = class PalletView extends View
     @
 
   draw: ->
+   return unless @canvasCtx
    @canvasCtx.fillStyle = 'black'
    @canvasCtx.fillRect 0, 0, @el.width, @el.height
-   @canvasCtx.fillStyle = 'pink'
-   @canvasCtx.fillRect @colorIx * multi, 0, multi, @el.height
-
+   if @colorIx
+     @canvasCtx.fillStyle = 'pink'
+     @canvasCtx.fillRect @colorIx * multi, 0, multi, @el.height
 
    for x in [0 ... Color.symbols.length]
      @canvasCtx.fillStyle = Color.toColor(Color.symbols.charAt(x))
@@ -34,9 +35,8 @@ module.exports = class PalletView extends View
   choose: ->
     x = (event.offsetX / multi) | 0
     @trigger "pickColor", Color.symbols.charAt(x)
-    @setFocusedColor Color.symbols.charAt(x)
 
-  setFocusedColor: (sym)->
+  setColor: (sym)->
     if sym
       @colorIx = Color.symbols.indexOf(sym)
     else

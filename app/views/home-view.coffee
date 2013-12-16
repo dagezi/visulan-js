@@ -15,7 +15,6 @@ module.exports = class HomeView extends View
     "click #js_play": "play"
     "click #js_pause": "pause"
     "click #js_link": "showLink"
-    "click #js_edit": "editMode"
     "click #js_select": "selectMdoe"
     "click #js_paste": "pasteMode"
 
@@ -23,6 +22,7 @@ module.exports = class HomeView extends View
     super
     @worldView = new WorldView model: @world
     @palletView = new PalletView
+    @palletView.setColor('z')
 
     @wholeRegion = @world.getWholeRegion()
 
@@ -33,7 +33,7 @@ module.exports = class HomeView extends View
     @$('#js-pallet-container').html @palletView.render().el
     @$('#js-visulan-slot').html @worldView.render().el
     @palletView.on 'pickColor', @pickColor
-  
+
     @setIsPlaying @isPlaying
 
     @on "playingState", @setIsPlaying
@@ -63,18 +63,18 @@ module.exports = class HomeView extends View
   pickColor: (sym) =>
     console.log sym
     @worldView.setPenColor(sym)
+    @worldView.setModeEdit()
+    @$('.js-world-view-mode').removeClass('active')
+    @palletView.setColor(sym)
 
   selectMdoe: ->
     @worldView.setModeSelect()
     @$('.js-world-view-mode').removeClass('active')
+    @palletView.setColor(null)
     @$('#js_select').addClass('active')
 
-  editMode: ->
-    @worldView.setModeEdit()
-    @$('.js-world-view-mode').removeClass('active')
-    @$('#js_edit').addClass('active')
-    
   pasteMode: ()->
     @worldView.setModePaste()
     @$('.js-world-view-mode').removeClass('active')
+    @palletView.setColor(null)
     @$('#js_paste').addClass('active')
