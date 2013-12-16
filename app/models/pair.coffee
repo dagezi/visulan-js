@@ -11,6 +11,6 @@ module.exports = class Pair extends Model
 
   # Returns MatchResult.
   # Do not substibutate here
-  match: (region)->
-    dests = @pattern.match region
+  match: (region, matchedRegions)->
+    dests = @pattern.match region, matchedRegions
     (new MatchResult(dest, @after) for dest in dests)
