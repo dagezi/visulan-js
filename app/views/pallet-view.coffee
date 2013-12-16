@@ -8,22 +8,37 @@ module.exports = class PalletView extends View
   events:
     'click' : 'choose'
 
-  @syms: '_abcdefghijklmnopqrstuvwxyz'
+  multi = 12 # with small number, dots blur. I don't know why.
+  margin = 2
 
   render: ->
     super
-    @multi = 10 # with small number, dots blur. I don't know why.
-    @el.height = 1 * @multi
-    @el.width = 27 * @multi
+    @el.height = 1 * multi + 2 * margin
+    @el.width = multi * Color.symbols.length
     @canvasCtx = @el.getContext('2d')
+    
     @draw()
     @
 
   draw: ->
-   for x in [0 ... 27]
-     @canvasCtx.fillStyle = Color.toColor(PalletView.syms.charAt(x))
-     @canvasCtx.fillRect x * @multi, 0, (x + 1) * @multi, @multi
+   @canvasCtx.fillStyle = 'black'
+   @canvasCtx.fillRect 0, 0, @el.width, @el.height
+   @canvasCtx.fillStyle = 'pink'
+   @canvasCtx.fillRect @colorIx * multi, 0, multi, @el.height
+
+
+   for x in [0 ... Color.symbols.length]
+     @canvasCtx.fillStyle = Color.toColor(Color.symbols.charAt(x))
+     @canvasCtx.fillRect x * multi, margin, multi, multi
   
   choose: ->
-    x = (event.offsetX / @multi) | 0
-    @trigger "pickColor", PalletView.syms.charAt(x)
+    x = (event.offsetX / multi) | 0
+    @trigger "pickColor", Color.symbols.charAt(x)
+    @setFocusedColor Color.symbols.charAt(x)
+
+  setFocusedColor: (sym)->
+    if sym
+      @colorIx = Color.symbols.indexOf(sym)
+    else
+      @colorIx = null
+    @draw()
