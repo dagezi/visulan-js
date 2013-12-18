@@ -24,7 +24,7 @@ module.exports = class PalletView extends View
    return unless @canvasCtx
    @canvasCtx.fillStyle = 'black'
    @canvasCtx.fillRect 0, 0, @el.width, @el.height
-   if @colorIx
+   if (typeof @colorIx) is "number"
      @canvasCtx.fillStyle = 'pink'
      @canvasCtx.fillRect @colorIx * multi, 0, multi, @el.height
 
