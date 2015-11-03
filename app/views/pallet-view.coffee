@@ -32,7 +32,7 @@ module.exports = class PalletView extends View
      @canvasCtx.fillStyle = Color.toColor(Color.symbols.charAt(x))
      @canvasCtx.fillRect x * multi, margin, multi, multi
   
-  choose: ->
+  choose: (event)->
     x = (event.offsetX / multi) | 0
     @trigger "pickColor", Color.symbols.charAt(x)
 
